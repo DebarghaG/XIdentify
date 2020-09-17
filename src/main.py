@@ -5,10 +5,8 @@ from werkzeug.utils import secure_filename
 from werkzeug.middleware.shared_data import SharedDataMiddleware
 
 
-
-
 UPLOAD_FOLDER = './uploads/'
-ALLOWED_EXTENSIONS = { 'png', 'jpg', 'jpeg'}
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -37,8 +35,8 @@ def upload_file():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             print(filename)
             process_image.analyze(filename)
-            filename = "./processed"+filename
-            return redirect(url_for('uploaded_file',filename=filename))
+            filename = "./processed" + filename
+            return redirect(url_for('uploaded_file', filename=filename))
 
     return '''
     <!doctype html>
@@ -53,7 +51,7 @@ def upload_file():
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'],filename)
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 
 app.add_url_rule('/uploads/<filename>', 'uploaded_file', build_only=True)

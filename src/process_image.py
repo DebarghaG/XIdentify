@@ -2,7 +2,8 @@ import matplotlib.pyplot as plt
 from PIL import Image
 import torch.nn as nn
 import numpy as np
-import os, json
+import os
+import json
 
 import torch
 from torchvision import models, transforms
@@ -12,6 +13,7 @@ import torch.nn.functional as F
 from skimage.segmentation import mark_boundaries
 from lime import lime_image
 
+
 def analyze(filepath):
 
     def get_image(path):
@@ -20,7 +22,6 @@ def analyze(filepath):
                 return img.convert('RGB')
 
     # resize and take the center part of image to what our model expects
-
 
     def get_input_transform():
         normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
@@ -34,16 +35,15 @@ def analyze(filepath):
 
         return transf
 
-
     def get_input_tensors(img):
         transf = get_input_transform()
         # unsqeeze converts single image to batch of 1
         return transf(img).unsqueeze(0)
 
-
     def batch_predict(images):
         model.eval()
-        batch = torch.stack(tuple(preprocess_transform(i) for i in images), dim=0)
+        batch = torch.stack(tuple(preprocess_transform(i)
+                                  for i in images), dim=0)
 
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         model.to(device)
@@ -53,7 +53,6 @@ def analyze(filepath):
         probs = F.softmax(logits, dim=1)
         return probs.detach().cpu().numpy()
 
-
     def get_pil_transform():
         transf = transforms.Compose([
             transforms.Resize((256, 256)),
@@ -61,7 +60,6 @@ def analyze(filepath):
         ])
 
         return transf
-
 
     def get_preprocess_transform():
         normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
@@ -75,7 +73,7 @@ def analyze(filepath):
     print("Getting Inception Model")
 
     model = models.inception_v3(pretrained=True)
-    filepath = './uploads/'+filepath
+    filepath = './uploads/' + filepath
     img = get_image(filepath)
     plt.imsave(filepath, img)
     idx2label, cls2label, cls2idx = [], {}, {}
@@ -86,7 +84,6 @@ def analyze(filepath):
                      for k in range(len(class_idx))}
         cls2idx = {class_idx[str(k)][0]: k for k in range(len(class_idx))}
 
-
     img_t = get_input_tensors(img)
     model.eval()
     logits = model(img_t)
@@ -96,10 +93,8 @@ def analyze(filepath):
     print(tuple((p, c, idx2label[c]) for p, c in zip(
         probs5[0][0].detach().numpy(), probs5[1][0].detach().numpy())))
 
-
     pill_transf = get_pil_transform()
     preprocess_transform = get_preprocess_transform()
-
 
     test_pred = batch_predict([pill_transf(img)])
     test_pred.squeeze().argmax()
@@ -121,5 +116,5 @@ def analyze(filepath):
         explanation.top_labels[0], positive_only=False, num_features=10, hide_rest=False)
     img_boundry2 = mark_boundaries(temp / 255.0, mask)
 
-    filepath = "./uploads/processed"+filepath[10:]
+    filepath = "./uploads/processed" + filepath[10:]
     plt.imsave(filepath, img_boundry2)
