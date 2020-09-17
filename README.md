@@ -7,8 +7,11 @@ An API that does image predictions, and explains what parts of the image contrib
 - Demo of visualising the superpixels that lead towards the specific predictions
 
 ## Sample Results
-  ![Image of dognoise](/src/uploads/funnydog.jpeg)
-  ![Image of dognoise](/src/uploads/processedfunnydog.jpeg)
+  ![Image of funnydog](/src/uploads/processedfunnydog.jpeg)
+  ![Image of hoodie](/src/uploads/processedbelugahoodie.jpeg)
+  ![Image of Putin](/src/uploads/processed02.png)
+  ![Image of dognoise](/src/uploads/dognoise.png)
+
 
 
 ## Requirements
