@@ -21,8 +21,8 @@ An API that does image predictions, and explains what parts of the image contrib
 - SkImage
 
 ## How to run
-  '''
-  cd src/
-  export FLASK_APP = main.py
-  flask run
-  '''
+
+  > cd src/
+  > export FLASK_APP = main.py
+  > flask run
+  
