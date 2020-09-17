@@ -90,9 +90,11 @@ def analyze(filepath):
 
     probs = F.softmax(logits, dim=1)
     probs5 = probs.topk(5)
-    print(tuple((p, c, idx2label[c]) for p, c in zip(
+
+    predictions = (tuple((p, c, idx2label[c]) for p, c in zip(
         probs5[0][0].detach().numpy(), probs5[1][0].detach().numpy())))
 
+    print(predictions)
     pill_transf = get_pil_transform()
     preprocess_transform = get_preprocess_transform()
 
@@ -118,3 +120,4 @@ def analyze(filepath):
 
     filepath = "./uploads/processed" + filepath[10:]
     plt.imsave(filepath, img_boundry2)
+    return predictions
